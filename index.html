@@ -1,13 +1,21 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
 <title>Finest Foods</title>
 
 <link rel="stylesheet" href="style.css">
 
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
 <script src="app.js" defer></script>
 
 </head>
@@ -15,41 +23,79 @@
 <body>
 
 <header>
-<h1>🟢 Finest Foods</h1>
-<p>Consulta de precios</p>
+
+<div class="logo">
+
+🟢 Finest Foods
+
+</div>
+
+<p class="subtitulo">
+
+Consulta de precios
+
+</p>
+
 </header>
+
+<main>
 
 <div class="card">
 
-<input type="file"
+<input
+type="file"
 id="csvFile"
 accept=".csv">
 
 <button id="cargarBtn">
-📂 Cargar productos
+
+📂 Cargar Productos
+
 </button>
 
 <input
 id="buscar"
+type="text"
 placeholder="Código de barras">
 
 <button id="buscarBtn">
+
 🔍 Buscar
+
 </button>
 
-<hr>
+<button id="scanBtn">
 
-<h2 id="producto">
-Sin producto
-</h2>
+📷 Escanear Código
 
-<h1 id="precio">
-B/. 0.00
-</h1>
+</button>
 
-<p id="codigo"></p>
+<div id="reader"></div>
+
+<div class="resultado">
+
+<div id="producto">
+
+Esperando búsqueda...
 
 </div>
 
+<div id="precio">
+
+B/. 0.00
+
+</div>
+
+<div id="codigo">
+
+</div>
+
+</div>
+
+</div>
+
+</main>
+
 </body>
+
 </html>
