@@ -1,72 +1,110 @@
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
 }
 
 body{
-background:#eef5ef;
+    background:#f2f5f3;
+    color:#222;
 }
 
 header{
-background:#118847;
-color:white;
-padding:20px;
-text-align:center;
-font-size:30px;
-font-weight:bold;
+    background:#178a45;
+    color:white;
+    text-align:center;
+    padding:25px 20px;
+    box-shadow:0 2px 8px rgba(0,0,0,.2);
+}
+
+.logo{
+    font-size:32px;
+    font-weight:bold;
+}
+
+.subtitulo{
+    margin-top:8px;
+    font-size:17px;
+    opacity:.9;
 }
 
 main{
-padding:20px;
+    max-width:700px;
+    margin:auto;
+    padding:20px;
 }
 
 .card{
-background:white;
-border-radius:20px;
-padding:20px;
-box-shadow:0 4px 15px rgba(0,0,0,.15);
+    background:white;
+    border-radius:20px;
+    padding:20px;
+    box-shadow:0 5px 18px rgba(0,0,0,.12);
 }
 
-input{
-width:100%;
-padding:15px;
-font-size:18px;
-border-radius:12px;
-border:1px solid #ccc;
-margin-top:15px;
+input[type=file]{
+    width:100%;
+    margin-bottom:15px;
+}
+
+input[type=text]{
+    width:100%;
+    padding:16px;
+    border-radius:12px;
+    border:1px solid #ccc;
+    font-size:18px;
+    margin-top:15px;
 }
 
 button{
-width:100%;
-margin-top:15px;
-padding:16px;
-font-size:20px;
-background:#118847;
-color:white;
-border:none;
-border-radius:12px;
+    width:100%;
+    padding:16px;
+    margin-top:15px;
+    background:#178a45;
+    color:white;
+    border:none;
+    border-radius:12px;
+    font-size:19px;
+    font-weight:bold;
+}
+
+button:active{
+    transform:scale(.98);
+}
+
+#reader{
+    margin-top:20px;
+    border-radius:15px;
+    overflow:hidden;
 }
 
 .resultado{
-margin-top:25px;
-text-align:center;
+    margin-top:30px;
+    text-align:center;
 }
 
 #producto{
-font-size:22px;
-font-weight:bold;
+    font-size:24px;
+    font-weight:bold;
 }
 
 #precio{
-font-size:48px;
-color:#118847;
-margin-top:15px;
-font-weight:bold;
+    font-size:58px;
+    color:#178a45;
+    font-weight:bold;
+    margin-top:20px;
 }
 
 #codigo{
-margin-top:15px;
-color:#777;
+    margin-top:15px;
+    color:#666;
+    font-size:18px;
+}
+
+.ok{
+    color:#178a45;
+}
+
+.error{
+    color:#d32f2f;
 }
