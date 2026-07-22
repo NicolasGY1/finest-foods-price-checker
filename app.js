@@ -131,3 +131,38 @@ function iniciarEscaner() {
     );
 
 }
+document.getElementById("scanBtn").addEventListener("click", async () => {
+
+    if (typeof Html5Qrcode === "undefined") {
+        alert("La librería del escáner no cargó.");
+        return;
+    }
+
+    const html5QrCode = new Html5Qrcode("reader");
+
+    try {
+
+        await html5QrCode.start(
+            { facingMode: "environment" },
+            {
+                fps: 10,
+                qrbox: 250
+            },
+            (decodedText) => {
+
+                document.getElementById("buscar").value = decodedText;
+
+                buscarProducto();
+
+                html5QrCode.stop();
+
+            }
+        );
+
+    } catch (e) {
+
+        alert("Error al abrir la cámara: " + e);
+
+    }
+
+});
