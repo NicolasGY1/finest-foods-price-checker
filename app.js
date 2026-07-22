@@ -144,12 +144,15 @@ document.getElementById("scanBtn").addEventListener("click", async () => {
 
         await html5QrCode.start(
             { facingMode: "environment" },
-            {
-    fps: 20,
+           {
+    fps: 30,
     qrbox: {
-        width: 320,
-        height: 180
+        width: 300,
+        height: 120
     },
+    aspectRatio: 1.777,
+    disableFlip: true
+},
     aspectRatio: 1.777
 },
             (decodedText) => {
