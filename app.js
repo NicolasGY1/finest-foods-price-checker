@@ -8,6 +8,17 @@ window.addEventListener("load", () => {
     cargarBtn().addEventListener("click", cargarCSV);
     buscarBtn().addEventListener("click", buscarProducto);
 
+    document.getElementById("scanBtn").addEventListener("click", iniciarEscaner);
+
+    document.getElementById("buscar").addEventListener("keydown", e => {
+        if (e.key === "Enter") buscarProducto();
+    });
+
+});
+
+    cargarBtn().addEventListener("click", cargarCSV);
+    buscarBtn().addEventListener("click", buscarProducto);
+
     document.getElementById("buscar").addEventListener("keydown", e => {
         if (e.key === "Enter") buscarProducto();
     });
