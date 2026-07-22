@@ -95,3 +95,39 @@ function buscarProducto(){
     document.getElementById("codigo").textContent="Código: "+p.codigo;
 
 }
+let scanner = null;
+
+document.getElementById("scanBtn").onclick = iniciarEscaner;
+
+function iniciarEscaner() {
+
+    if (scanner) {
+        return;
+    }
+
+    scanner = new Html5Qrcode("reader");
+
+    scanner.start(
+        {
+            facingMode: "environment"
+        },
+        {
+            fps: 10,
+            qrbox: 250
+        },
+        (codigo) => {
+
+            document.getElementById("buscar").value = codigo;
+
+            buscarProducto();
+
+            scanner.stop().then(() => {
+                scanner.clear();
+                scanner = null;
+            });
+
+        },
+        () => {}
+    );
+
+}
