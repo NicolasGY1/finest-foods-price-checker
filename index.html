@@ -1,118 +1,48 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Finest Foods</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finest Foods</title>
 
-<link rel="manifest" href="manifest.json">
-
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,Helvetica,sans-serif;
-}
-
-body{
-background:#eef3ef;
-}
-
-header{
-background:#128C45;
-color:white;
-padding:20px;
-text-align:center;
-font-size:30px;
-font-weight:bold;
-}
-
-.container{
-padding:20px;
-}
-
-.card{
-background:white;
-border-radius:20px;
-padding:20px;
-box-shadow:0 5px 15px rgba(0,0,0,.15);
-}
-
-button{
-width:100%;
-background:#128C45;
-color:white;
-border:none;
-padding:18px;
-font-size:20px;
-border-radius:15px;
-margin-top:15px;
-cursor:pointer;
-}
-
-#producto{
-margin-top:30px;
-font-size:24px;
-font-weight:bold;
-}
-
-#precio{
-font-size:55px;
-color:#128C45;
-font-weight:bold;
-margin-top:10px;
-}
-
-#codigo{
-margin-top:15px;
-font-size:18px;
-color:#666;
-}
-
-input{
-width:100%;
-padding:15px;
-font-size:18px;
-margin-top:20px;
-border-radius:10px;
-border:1px solid #ccc;
-}
-
-</style>
-
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
 </head>
 
 <body>
 
 <header>
 
+<div class="logo">
 🟢 Finest Foods
+</div>
 
 </header>
 
-<div class="container">
+<main>
 
 <div class="card">
 
 <h2>Consulta de Precio</h2>
 
 <input
+type="text"
 id="buscar"
-placeholder="Buscar por nombre o código">
+placeholder="Escanea o escribe el código">
 
-<button onclick="buscarProducto()">
+<button id="buscarBtn">
 
-🔍 Buscar
+🔍 Buscar Producto
 
 </button>
 
-<button>
+<button id="scanBtn">
 
 📷 Escanear Código
 
 </button>
+
+<div class="resultado">
 
 <div id="producto">
 
@@ -134,57 +64,10 @@ B/. 0.00
 
 </div>
 
-<script>
+</main>
 
-const productos=[
-{
-codigo:"000000410135",
-nombre:"LONGKOU VERMICELLI 250G",
-precio:"1.95"
-},
-{
-codigo:"0000001",
-nombre:"EMPANADA DE CULANTRO POLLO",
-precio:"12.50"
-}
-];
-
-function buscarProducto(){
-
-const texto=document
-.getElementById("buscar")
-.value
-.toLowerCase();
-
-const producto=productos.find(p=>
-
-p.codigo===texto ||
-
-p.nombre.toLowerCase().includes(texto)
-
-);
-
-if(producto){
-
-document.getElementById("producto").innerHTML=producto.nombre;
-
-document.getElementById("precio").innerHTML="B/. "+producto.precio;
-
-document.getElementById("codigo").innerHTML=producto.codigo;
-
-}else{
-
-document.getElementById("producto").innerHTML="Producto no encontrado";
-
-document.getElementById("precio").innerHTML="";
-
-document.getElementById("codigo").innerHTML="";
-
-}
-
-}
-
-</script>
+<script src="app.js"></script>
 
 </body>
+
 </html>
