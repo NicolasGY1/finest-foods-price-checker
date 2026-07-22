@@ -7,42 +7,42 @@ async function cargarProductos() {
 
         const lineas = texto.split(/\r?\n/);
 
-        if (lineas.length < 2) {
-            alert("El CSV está vacío.");
-            return;
-        }
-
-        const encabezados = lineas[0].split(",");
-
-        const idxCodigo = encabezados.findIndex(h =>
-            h.toLowerCase().includes("codigo"));
-
-        const idxNombre = encabezados.findIndex(h =>
-            h.toLowerCase().includes("descripcion"));
-
-        const idxPrecio = encabezados.findIndex(h =>
-            h.toLowerCase().includes("precio1"));
-
         productos = [];
 
-        for (let i = 1; i < lineas.length; i++) {
+        for (let i = 0; i < lineas.length; i++) {
 
-            if (!lineas[i].trim()) continue;
+            const linea = lineas[i].trim();
 
-            const columnas = lineas[i].split(",");
+            if (linea === "") continue;
 
-            productos.push({
-                codigo: (columnas[idxCodigo] || "").trim(),
-                nombre: (columnas[idxNombre] || "").trim(),
-                precio: (columnas[idxPrecio] || "").trim()
-            });
+            const campos = linea.split(";");
+
+            if (campos.length < 7) continue;
+
+            const codigo = campos[0].trim();
+            const nombre = campos[2].trim();
+            const precio = campos[6].trim();
+
+            if (codigo !== "") {
+
+                productos.push({
+                    codigo,
+                    nombre,
+                    precio
+                });
+
+            }
+
         }
 
-        console.log(productos.length + " productos cargados");
+        console.log("Productos cargados:", productos.length);
 
     } catch (e) {
+
+        alert("No se pudo leer PROGC0001.csv");
+
         console.error(e);
-        alert("No se pudo cargar PROGC0001.csv");
+
     }
 }
 
@@ -54,10 +54,8 @@ function buscarProducto() {
         .trim()
         .toLowerCase();
 
-    if (texto === "") return;
-
     const producto = productos.find(p =>
-        p.codigo === texto ||
+        p.codigo.toLowerCase() === texto ||
         p.nombre.toLowerCase().includes(texto)
     );
 
@@ -81,23 +79,15 @@ function buscarProducto() {
 
     document.getElementById("codigo").textContent =
         "Código: " + producto.codigo;
+
 }
 
-window.onload = () => {
+window.onload = function () {
 
     cargarProductos();
 
     document
         .getElementById("buscarBtn")
-        .addEventListener("click", buscarProducto);
-
-    document
-        .getElementById("buscar")
-        .addEventListener("keypress", e => {
-
-            if (e.key === "Enter")
-                buscarProducto();
-
-        });
+        .onclick = buscarProducto;
 
 };
