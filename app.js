@@ -95,81 +95,80 @@ function buscarProducto(){
     document.getElementById("codigo").textContent="Código: "+p.codigo;
 
 }
-let scanner = null;
+let codeReader = null;
+let scannerActivo = false;
 
-document.getElementById("scanBtn").onclick = iniciarEscaner;
+async function iniciarEscaner() {
 
-function iniciarEscaner() {
+    if (scannerActivo) return;
 
-    if (scanner) {
-        return;
-    }
+    scannerActivo = true;
 
-    scanner = new Html5Qrcode("reader");
-
-    scanner.start(
-        {
-            facingMode: "environment"
-        },
-        {
-            fps: 10,
-            qrbox: 250
-        },
-        (codigo) => {
-
-            document.getElementById("buscar").value = codigo;
-
-            buscarProducto();
-
-            scanner.stop().then(() => {
-                scanner.clear();
-                scanner = null;
-            });
-
-        },
-        () => {}
-    );
-
-}
-document.getElementById("scanBtn").addEventListener("click", async () => {
-
-    if (typeof Html5Qrcode === "undefined") {
-        alert("La librería del escáner no cargó.");
-        return;
-    }
-
-    const html5QrCode = new Html5Qrcode("reader");
+    codeReader = new ZXingBrowser.BrowserMultiFormatReader();
 
     try {
 
-        await html5QrCode.start(
-            { facingMode: "environment" },
-           {
-    fps: 30,
-    qrbox: {
-        width: 300,
-        height: 120
-    },
-    aspectRatio: 1.777,
-    disableFlip: true
-},
-    aspectRatio: 1.777
-},
-            (decodedText) => {
+        const devices = await ZXingBrowser.BrowserCodeReader.listVideoInputDevices();
 
-                document.getElementById("buscar").value = decodedText;
+        let deviceId = devices[0].deviceId;
 
-                buscarProducto();
+        for (const d of devices) {
 
-                html5QrCode.stop();
+            if (d.label.toLowerCase().includes("back") ||
+                d.label.toLowerCase().includes("rear")) {
+
+                deviceId = d.deviceId;
 
             }
+
+        }
+
+        await codeReader.decodeFromVideoDevice(
+            deviceId,
+            "reader",
+
+            (result, err) => {
+
+                if (result) {
+
+                    const codigo = result.getText();
+
+                    document.getElementById("buscar").value = codigo;
+
+                    buscarProducto();
+
+                    if (navigator.vibrate) {
+
+                        navigator.vibrate(100);
+
+                    }
+
+                }
+
+            }
+
         );
 
     } catch (e) {
 
-        alert("Error al abrir la cámara: " + e);
+        alert("No se pudo abrir la cámara.");
+
+        console.log(e);
+
+        scannerActivo = false;
 
     }
 
-});
+}
+
+function detenerEscaner(){
+
+    if(codeReader){
+
+        codeReader.reset();
+
+        scannerActivo=false;
+
+    }
+
+}
