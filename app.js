@@ -1,93 +1,97 @@
 let productos = [];
 
-async function cargarProductos() {
-    try {
-        const respuesta = await fetch("PROGC0001.csv");
-        const texto = await respuesta.text();
+const cargarBtn = () => document.getElementById("cargarBtn");
+const buscarBtn = () => document.getElementById("buscarBtn");
 
-        const lineas = texto.split(/\r?\n/);
+window.addEventListener("load", () => {
 
-        productos = [];
+    cargarBtn().addEventListener("click", cargarCSV);
+    buscarBtn().addEventListener("click", buscarProducto);
 
-        for (let i = 0; i < lineas.length; i++) {
+    document.getElementById("buscar").addEventListener("keydown", e => {
+        if (e.key === "Enter") buscarProducto();
+    });
 
-            const linea = lineas[i].trim();
+});
 
-            if (linea === "") continue;
+function cargarCSV() {
 
-            const campos = linea.split(";");
+    const archivo = document.getElementById("csvFile").files[0];
 
-            if (campos.length < 7) continue;
-
-            const codigo = campos[0].trim();
-            const nombre = campos[2].trim();
-            const precio = campos[6].trim();
-
-            if (codigo !== "") {
-
-                productos.push({
-                    codigo,
-                    nombre,
-                    precio
-                });
-
-            }
-
-        }
-
-        console.log("Productos cargados:", productos.length);
-
-    } catch (e) {
-
-        alert("No se pudo leer PROGC0001.csv");
-
-        console.error(e);
-
-    }
-}
-
-function buscarProducto() {
-
-    const texto = document
-        .getElementById("buscar")
-        .value
-        .trim()
-        .toLowerCase();
-
-    const producto = productos.find(p =>
-        p.codigo.toLowerCase() === texto ||
-        p.nombre.toLowerCase().includes(texto)
-    );
-
-    if (!producto) {
-
-        document.getElementById("producto").textContent =
-            "Producto no encontrado";
-
-        document.getElementById("precio").textContent = "";
-
-        document.getElementById("codigo").textContent = "";
-
+    if (!archivo) {
+        alert("Selecciona primero el archivo CSV.");
         return;
     }
 
-    document.getElementById("producto").textContent =
-        producto.nombre;
+    const lector = new FileReader();
 
-    document.getElementById("precio").textContent =
-        "B/. " + producto.precio;
+    lector.onload = function(e){
 
-    document.getElementById("codigo").textContent =
-        "Código: " + producto.codigo;
+        const texto = e.target.result;
+
+        productos = [];
+
+        const lineas = texto.split(/\r?\n/);
+
+        lineas.forEach(linea=>{
+
+            if(linea.trim()=="") return;
+
+            const c = linea.split(";");
+
+            if(c.length < 7) return;
+
+            productos.push({
+
+                codigo: c[0].trim(),
+
+                nombre: c[2].trim(),
+
+                precio: c[6].trim()
+
+            });
+
+        });
+
+        localStorage.setItem("productos",JSON.stringify(productos));
+
+        alert(productos.length+" productos cargados.");
+
+    };
+
+    lector.readAsText(archivo,"ISO-8859-1");
 
 }
 
-window.onload = function () {
+function buscarProducto(){
 
-    cargarProductos();
+    if(productos.length==0){
 
-    document
-        .getElementById("buscarBtn")
-        .onclick = buscarProducto;
+        const guardados=localStorage.getItem("productos");
 
-};
+        if(guardados){
+
+            productos=JSON.parse(guardados);
+
+        }
+
+    }
+
+    const codigo=document.getElementById("buscar").value.trim();
+
+    const p=productos.find(x=>x.codigo===codigo);
+
+    if(!p){
+
+        document.getElementById("producto").textContent="Producto no encontrado";
+        document.getElementById("precio").textContent="";
+        document.getElementById("codigo").textContent="";
+        return;
+
+    }
+
+    document.getElementById("producto").textContent=p.nombre;
+    document.getElementById("precio").textContent="B/. "+p.precio;
+    document.getElementById("codigo").textContent="Código: "+p.codigo;
+
+}
