@@ -1,67 +1,55 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Finest Foods</title>
 
 <link rel="stylesheet" href="style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script src="app.js" defer></script>
 
 </head>
 
 <body>
 
 <header>
-
 <h1>🟢 Finest Foods</h1>
-
 <p>Consulta de precios</p>
-
 </header>
 
 <div class="card">
 
-<input
-id="buscar"
-type="text"
-placeholder="Escanea o escribe el código">
+<input type="file"
+id="csvFile"
+accept=".csv">
 
-<button id="buscarBtn">
-
-🔍 Buscar
-
+<button id="cargarBtn">
+📂 Cargar productos
 </button>
 
-<button id="scanBtn">
+<input
+id="buscar"
+placeholder="Código de barras">
 
-📷 Escanear (Próximamente)
-
+<button id="buscarBtn">
+🔍 Buscar
 </button>
 
 <hr>
 
 <h2 id="producto">
-
-Esperando búsqueda...
-
+Sin producto
 </h2>
 
 <h1 id="precio">
-
 B/. 0.00
-
 </h1>
 
 <p id="codigo"></p>
 
 </div>
 
-<script src="app.js"></script>
-
 </body>
-
 </html>
