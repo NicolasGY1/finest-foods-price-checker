@@ -145,9 +145,13 @@ document.getElementById("scanBtn").addEventListener("click", async () => {
         await html5QrCode.start(
             { facingMode: "environment" },
             {
-                fps: 10,
-                qrbox: 250
-            },
+    fps: 20,
+    qrbox: {
+        width: 320,
+        height: 180
+    },
+    aspectRatio: 1.777
+},
             (decodedText) => {
 
                 document.getElementById("buscar").value = decodedText;
