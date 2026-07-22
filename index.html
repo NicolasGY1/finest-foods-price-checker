@@ -1,70 +1,64 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finest Foods</title>
 
-    <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Finest Foods</title>
+
+<link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
 
 <header>
 
-<div class="logo">
-🟢 Finest Foods
-</div>
+<h1>🟢 Finest Foods</h1>
+
+<p>Consulta de precios</p>
 
 </header>
 
-<main>
-
 <div class="card">
 
-<h2>Consulta de Precio</h2>
-
 <input
-type="text"
 id="buscar"
+type="text"
 placeholder="Escanea o escribe el código">
 
 <button id="buscarBtn">
 
-🔍 Buscar Producto
+🔍 Buscar
 
 </button>
 
 <button id="scanBtn">
 
-📷 Escanear Código
+📷 Escanear (Próximamente)
 
 </button>
 
-<div class="resultado">
+<hr>
 
-<div id="producto">
+<h2 id="producto">
 
 Esperando búsqueda...
 
-</div>
+</h2>
 
-<div id="precio">
+<h1 id="precio">
 
 B/. 0.00
 
-</div>
+</h1>
 
-<div id="codigo">
-
-</div>
+<p id="codigo"></p>
 
 </div>
-
-</div>
-
-</main>
 
 <script src="app.js"></script>
 
