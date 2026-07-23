@@ -42,16 +42,7 @@ Consulta de precios
 
 <div class="card">
 
-<input
-type="file"
-id="csvFile"
-accept=".csv">
-
-<button id="cargarBtn">
-
-📂 Cargar Productos
-
-</button>
+<h2>🔍 Buscar producto</h2>
 
 <input
 id="buscar"
@@ -69,8 +60,6 @@ placeholder="Código de barras">
 📷 Escanear Código
 
 </button>
-
-<video id="reader" muted playsinline></video>
 
 <div class="resultado">
 
@@ -91,6 +80,62 @@ B/. 0.00
 </div>
 
 </div>
+
+</div>
+
+<div class="card">
+
+<h2>➕ Agregar / Actualizar producto</h2>
+
+<input
+id="codigoNuevo"
+type="text"
+placeholder="Código de barras">
+
+<button id="scanNuevoBtn">
+
+📷 Escanear para agregar
+
+</button>
+
+<input
+id="nombreNuevo"
+type="text"
+placeholder="Nombre del producto">
+
+<input
+id="precioNuevo"
+type="number"
+step="0.01"
+min="0"
+placeholder="Precio">
+
+<button id="guardarBtn">
+
+💾 Guardar Producto
+
+</button>
+
+<div id="mensajeGuardado"></div>
+
+</div>
+
+<video id="reader" muted playsinline></video>
+
+<div class="card">
+
+<h2>📂 Importar CSV (opcional)</h2>
+
+<input
+type="file"
+id="csvFile"
+accept=".csv">
+
+<button id="cargarBtn">
+
+📂 Cargar Productos desde CSV
+
+</button>
 
 </div>
 
