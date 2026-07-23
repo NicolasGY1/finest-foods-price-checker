@@ -172,6 +172,8 @@ async function iniciarEscaner(destino) {
     escaneando = true;
     campoDestino = destino || "buscar";
 
+    document.getElementById("readerWrap").classList.add("activo");
+
     const video = document.getElementById("reader");
 
     // 1) Intentar con el escáner NATIVO del navegador (más rápido, usa el hardware del teléfono)
@@ -230,6 +232,7 @@ async function iniciarEscanerNativo(video) {
         console.log(err);
         alert("No se pudo abrir la cámara.");
         escaneando = false;
+        document.getElementById("readerWrap").classList.remove("activo");
 
     }
 
@@ -259,6 +262,7 @@ function iniciarEscanerZXing(video) {
         console.log(err);
         alert("No se pudo abrir la cámara.");
         escaneando = false;
+        document.getElementById("readerWrap").classList.remove("activo");
 
     }
 
@@ -296,5 +300,7 @@ function detenerEscaner() {
 
     const video = document.getElementById("reader");
     video.srcObject = null;
+
+    document.getElementById("readerWrap").classList.remove("activo");
 
 }
