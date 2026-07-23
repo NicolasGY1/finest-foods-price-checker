@@ -99,68 +99,136 @@ function buscarProducto(){
     document.getElementById("codigo").textContent="Código: "+p.codigo;
 
 }
-let scanner = null;
+let escaneando = false;
+let streamActivo = null;
+let zxingReader = null;
 
 async function iniciarEscaner() {
 
-    if (scanner) return;
+    if (escaneando) return;
+    escaneando = true;
 
-    scanner = new Html5Qrcode("reader");
+    const video = document.getElementById("reader");
+
+    // 1) Intentar con el escáner NATIVO del navegador (más rápido, usa el hardware del teléfono)
+    if ("BarcodeDetector" in window) {
+        try {
+            const formatos = await BarcodeDetector.getSupportedFormats();
+            if (formatos.includes("ean_13")) {
+                await iniciarEscanerNativo(video);
+                return;
+            }
+        } catch (err) {
+            console.log("BarcodeDetector no disponible, se usará ZXing:", err);
+        }
+    }
+
+    // 2) Respaldo: ZXing (funciona en cualquier navegador, ej. iPhone/Safari)
+    iniciarEscanerZXing(video);
+
+}
+
+async function iniciarEscanerNativo(video) {
 
     try {
 
-        await scanner.start(
+        const detector = new BarcodeDetector({ formats: ["ean_13"] });
 
-            {
-                facingMode: "environment"
-            },
+        streamActivo = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: "environment" }
+        });
 
-            {
-                fps: 10,
-qrbox: {
-    width: 200,
-    height: 80
-},
-formatsToSupport: [
-    Html5QrcodeSupportedFormats.EAN_13
-],
-                aspectRatio: 1.777,
-                disableFlip: true,
-                rememberLastUsedCamera: true
-            },
+        video.srcObject = streamActivo;
+        await video.play();
 
-            (decodedText) => {
+        const loop = async () => {
 
-                document.getElementById("buscar").value = decodedText;
+            if (!escaneando) return;
 
-                buscarProducto();
-
-                if (navigator.vibrate) {
-                    navigator.vibrate(100);
+            try {
+                const codigos = await detector.detect(video);
+                if (codigos.length > 0) {
+                    onCodigoDetectado(codigos[0].rawValue);
+                    return;
                 }
+            } catch (e) {
+                console.log(e);
+            }
 
-                scanner.stop().then(() => {
+            requestAnimationFrame(loop);
 
-                    scanner.clear();
+        };
 
-                    scanner = null;
+        loop();
 
-                });
+    } catch (err) {
 
-            },
+        console.log(err);
+        alert("No se pudo abrir la cámara.");
+        escaneando = false;
 
-            () => {}
+    }
 
+}
+
+function iniciarEscanerZXing(video) {
+
+    try {
+
+        const hints = new Map();
+        hints.set(ZXing.DecodeHintType.POSSIBLE_FORMATS, [ZXing.BarcodeFormat.EAN_13]);
+
+        zxingReader = new ZXing.BrowserMultiFormatReader(hints);
+
+        zxingReader.decodeFromConstraints(
+            { video: { facingMode: "environment" } },
+            video,
+            (resultado, error) => {
+                if (resultado) {
+                    onCodigoDetectado(resultado.getText());
+                }
+            }
         );
 
     } catch (err) {
 
         console.log(err);
-
         alert("No se pudo abrir la cámara.");
-
-        scanner = null;
+        escaneando = false;
 
     }
+
+}
+
+function onCodigoDetectado(texto) {
+
+    document.getElementById("buscar").value = texto;
+
+    buscarProducto();
+
+    if (navigator.vibrate) {
+        navigator.vibrate(100);
+    }
+
+    detenerEscaner();
+
+}
+
+function detenerEscaner() {
+
+    escaneando = false;
+
+    if (streamActivo) {
+        streamActivo.getTracks().forEach(t => t.stop());
+        streamActivo = null;
+    }
+
+    if (zxingReader) {
+        zxingReader.reset();
+        zxingReader = null;
+    }
+
+    const video = document.getElementById("reader");
+    video.srcObject = null;
 
 }
