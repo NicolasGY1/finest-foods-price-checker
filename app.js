@@ -116,11 +116,14 @@ async function iniciarEscaner() {
             },
 
             {
-                fps: 25,
-                qrbox: {
-                    width: 280,
-                    height: 120
-                },
+                fps: 10,
+qrbox: {
+    width: 200,
+    height: 80
+},
+formatsToSupport: [
+    Html5QrcodeSupportedFormats.EAN_13
+],
                 aspectRatio: 1.777,
                 disableFlip: true,
                 rememberLastUsedCamera: true
