@@ -73,9 +73,13 @@ button:active{
 }
 
 #reader{
+    display:block;
+    width:100%;
     margin-top:20px;
     border-radius:15px;
     overflow:hidden;
+    background:#000;
+    object-fit:cover;
 }
 
 .resultado{
