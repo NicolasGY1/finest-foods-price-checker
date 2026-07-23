@@ -84,14 +84,38 @@ button:active{
     transform:scale(.98);
 }
 
-#reader{
-    display:block;
+.reader-wrap{
+    display:none;
+    position:relative;
     width:100%;
+    height:280px;
     margin-top:20px;
     border-radius:15px;
     overflow:hidden;
     background:#000;
+}
+
+.reader-wrap.activo{
+    display:block;
+}
+
+#reader{
+    display:block;
+    width:100%;
+    height:100%;
     object-fit:cover;
+}
+
+.scan-guide{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:80%;
+    height:90px;
+    border:3px solid #178a45;
+    border-radius:10px;
+    pointer-events:none;
 }
 
 .resultado{
