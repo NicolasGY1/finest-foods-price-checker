@@ -1,33 +1,47 @@
-const CACHE="finest-foods-v1";
+const CACHE = "finest-foods-v2";
 
-const archivos=[
-"./",
-"./index.html",
-"./style.css",
-"./app.js",
-"./manifest.json"
+const archivos = [
+    "./",
+    "./index.html",
+    "./style.css",
+    "./app.js",
+    "./manifest.json"
 ];
 
-self.addEventListener("install",e=>{
+self.addEventListener("install", e => {
 
-e.waitUntil(
+    self.skipWaiting();
 
-caches.open(CACHE)
-
-.then(cache=>cache.addAll(archivos))
-
-);
+    e.waitUntil(
+        caches.open(CACHE).then(cache => cache.addAll(archivos))
+    );
 
 });
 
-self.addEventListener("fetch",e=>{
+self.addEventListener("activate", e => {
 
-e.respondWith(
+    e.waitUntil(
+        caches.keys().then(nombres =>
+            Promise.all(
+                nombres.filter(n => n !== CACHE).map(n => caches.delete(n))
+            )
+        ).then(() => self.clients.claim())
+    );
 
-caches.match(e.request)
+});
 
-.then(r=>r||fetch(e.request))
+self.addEventListener("fetch", e => {
 
-);
+    // Siempre intenta traer la versión más reciente de internet primero.
+    // Si no hay internet, usa la copia guardada (para que la app siga funcionando offline).
+    e.respondWith(
+        fetch(e.request)
+            .then(respuesta => {
+                const copia = respuesta.clone();
+                caches.open(CACHE).then(cache => cache.put(e.request, copia));
+                return respuesta;
+            })
+            .catch(() => caches.match(e.request))
+    );
 
 });
