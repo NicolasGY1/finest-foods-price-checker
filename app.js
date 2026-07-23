@@ -36,6 +36,26 @@ function guardarEnStorage() {
     localStorage.setItem("productos", JSON.stringify(productos));
 }
 
+function normalizarCodigo(codigo) {
+
+    if (!codigo) return "";
+
+    // Quita ceros al inicio (ej. 0123456789012 y 123456789012 se tratan como el mismo código)
+    return codigo.trim().replace(/^0+(?=\d)/, "");
+
+}
+
+function buscarPorCodigo(lista, codigo) {
+
+    // 1) Primero intenta un match EXACTO (por si de verdad hay dos códigos distintos)
+    const exacto = lista.find(x => x.codigo === codigo);
+    if (exacto) return exacto;
+
+    // 2) Si no hay match exacto, ignora ceros al inicio (caso típico EAN-13 vs UPC-A)
+    return lista.find(x => normalizarCodigo(x.codigo) === normalizarCodigo(codigo));
+
+}
+
 function cargarCSV() {
 
     const archivo = document.getElementById("csvFile").files[0];
@@ -65,7 +85,7 @@ function cargarCSV() {
             const nombre = c[2].trim();
             const precio = c[6].trim();
 
-            const existente = productos.find(x => x.codigo === codigo);
+            const existente = buscarPorCodigo(productos, codigo);
 
             if (existente) {
                 existente.nombre = nombre;
@@ -100,7 +120,7 @@ function guardarProducto() {
         return;
     }
 
-    const existente = productos.find(x => x.codigo === codigo);
+    const existente = buscarPorCodigo(productos, codigo);
 
     if (existente) {
         existente.nombre = nombre;
@@ -125,7 +145,7 @@ function buscarProducto(){
 
     const codigo=document.getElementById("buscar").value.trim();
 
-    const p=productos.find(x=>x.codigo===codigo);
+    const p=buscarPorCodigo(productos, codigo);
 
     if(!p){
 
