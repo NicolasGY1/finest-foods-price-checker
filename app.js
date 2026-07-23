@@ -5,10 +5,14 @@ const buscarBtn = () => document.getElementById("buscarBtn");
 
 window.addEventListener("load", () => {
 
+    cargarProductosGuardados();
+
     cargarBtn().addEventListener("click", cargarCSV);
     buscarBtn().addEventListener("click", buscarProducto);
 
-    document.getElementById("scanBtn").addEventListener("click", iniciarEscaner);
+    document.getElementById("scanBtn").addEventListener("click", () => iniciarEscaner("buscar"));
+    document.getElementById("scanNuevoBtn").addEventListener("click", () => iniciarEscaner("codigoNuevo"));
+    document.getElementById("guardarBtn").addEventListener("click", guardarProducto);
 
     document.getElementById("buscar").addEventListener("keydown", e => {
         if (e.key === "Enter") buscarProducto();
@@ -17,6 +21,20 @@ window.addEventListener("load", () => {
 });
 
   
+
+function cargarProductosGuardados() {
+
+    const guardados = localStorage.getItem("productos");
+
+    if (guardados) {
+        productos = JSON.parse(guardados);
+    }
+
+}
+
+function guardarEnStorage() {
+    localStorage.setItem("productos", JSON.stringify(productos));
+}
 
 function cargarCSV() {
 
@@ -33,8 +51,6 @@ function cargarCSV() {
 
         const texto = e.target.result;
 
-        productos = [];
-
         const lineas = texto.split(/\r?\n/);
 
         lineas.forEach(linea=>{
@@ -45,21 +61,24 @@ function cargarCSV() {
 
             if(c.length < 7) return;
 
-            productos.push({
+            const codigo = c[0].trim();
+            const nombre = c[2].trim();
+            const precio = c[6].trim();
 
-                codigo: c[0].trim(),
+            const existente = productos.find(x => x.codigo === codigo);
 
-                nombre: c[2].trim(),
-
-                precio: c[6].trim()
-
-            });
+            if (existente) {
+                existente.nombre = nombre;
+                existente.precio = precio;
+            } else {
+                productos.push({ codigo, nombre, precio });
+            }
 
         });
 
-        localStorage.setItem("productos",JSON.stringify(productos));
+        guardarEnStorage();
 
-        alert(productos.length+" productos cargados.");
+        alert(productos.length+" productos en total.");
 
     };
 
@@ -67,19 +86,42 @@ function cargarCSV() {
 
 }
 
-function buscarProducto(){
+function guardarProducto() {
 
-    if(productos.length==0){
+    const codigo = document.getElementById("codigoNuevo").value.trim();
+    const nombre = document.getElementById("nombreNuevo").value.trim();
+    const precio = document.getElementById("precioNuevo").value.trim();
 
-        const guardados=localStorage.getItem("productos");
+    const mensaje = document.getElementById("mensajeGuardado");
 
-        if(guardados){
-
-            productos=JSON.parse(guardados);
-
-        }
-
+    if (!codigo || !nombre || !precio) {
+        mensaje.textContent = "Completa código, nombre y precio.";
+        mensaje.className = "error";
+        return;
     }
+
+    const existente = productos.find(x => x.codigo === codigo);
+
+    if (existente) {
+        existente.nombre = nombre;
+        existente.precio = precio;
+        mensaje.textContent = "Producto actualizado ✔";
+    } else {
+        productos.push({ codigo, nombre, precio });
+        mensaje.textContent = "Producto agregado ✔";
+    }
+
+    mensaje.className = "ok";
+
+    guardarEnStorage();
+
+    document.getElementById("codigoNuevo").value = "";
+    document.getElementById("nombreNuevo").value = "";
+    document.getElementById("precioNuevo").value = "";
+
+}
+
+function buscarProducto(){
 
     const codigo=document.getElementById("buscar").value.trim();
 
@@ -102,11 +144,13 @@ function buscarProducto(){
 let escaneando = false;
 let streamActivo = null;
 let zxingReader = null;
+let campoDestino = "buscar";
 
-async function iniciarEscaner() {
+async function iniciarEscaner(destino) {
 
     if (escaneando) return;
     escaneando = true;
+    campoDestino = destino || "buscar";
 
     const video = document.getElementById("reader");
 
@@ -202,9 +246,11 @@ function iniciarEscanerZXing(video) {
 
 function onCodigoDetectado(texto) {
 
-    document.getElementById("buscar").value = texto;
+    document.getElementById(campoDestino).value = texto;
 
-    buscarProducto();
+    if (campoDestino === "buscar") {
+        buscarProducto();
+    }
 
     if (navigator.vibrate) {
         navigator.vibrate(100);
