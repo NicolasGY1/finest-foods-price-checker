@@ -99,4 +99,65 @@ function buscarProducto(){
     document.getElementById("codigo").textContent="Código: "+p.codigo;
 
 }
+let scanner = null;
 
+async function iniciarEscaner() {
+
+    if (scanner) return;
+
+    scanner = new Html5Qrcode("reader");
+
+    try {
+
+        await scanner.start(
+
+            {
+                facingMode: "environment"
+            },
+
+            {
+                fps: 25,
+                qrbox: {
+                    width: 280,
+                    height: 120
+                },
+                aspectRatio: 1.777,
+                disableFlip: true,
+                rememberLastUsedCamera: true
+            },
+
+            (decodedText) => {
+
+                document.getElementById("buscar").value = decodedText;
+
+                buscarProducto();
+
+                if (navigator.vibrate) {
+                    navigator.vibrate(100);
+                }
+
+                scanner.stop().then(() => {
+
+                    scanner.clear();
+
+                    scanner = null;
+
+                });
+
+            },
+
+            () => {}
+
+        );
+
+    } catch (err) {
+
+        console.log(err);
+
+        alert("No se pudo abrir la cámara.");
+
+        scanner = null;
+
+    }
+
+}
