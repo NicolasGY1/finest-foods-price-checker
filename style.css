@@ -40,6 +40,18 @@ main{
     border-radius:20px;
     padding:20px;
     box-shadow:0 5px 18px rgba(0,0,0,.12);
+    margin-bottom:20px;
+}
+
+.card h2{
+    font-size:18px;
+    color:#178a45;
+}
+
+#mensajeGuardado{
+    margin-top:12px;
+    text-align:center;
+    font-weight:bold;
 }
 
 input[type=file]{
